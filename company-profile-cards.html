@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile Cards</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .card {
+            width: 200px;
+            height: 300px;
+            perspective: 1000px;
+            margin: 20px;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            color: #0012f8;
+        }
+    </style>
+</head>
+<body>
+
+    <h2><u>Sketch 1: Global Heatmap - - - by Jovi Dai</u></h2>
+    <h3>Description: A world map with varying shades of color to indicate the density of AI startups and investment amounts. The darker the color, the higher the density.</h3>
+    <h3>Interactive Features: Hovering over a country or city will show a tooltip with detailed statistics. Users can use drop-down menus and sliders to filter data by year, investment size, and AI sector.</h3>
+    <h3>Sketch:</h3>
+
+    <div id="cards"></div>
+    <script>
+        const data = [
+            {name: "Startup A", sector: "Healthcare", founder: "Alice", funding: 50, products: "AI diagnostic tool"},
+            {name: "Startup B", sector: "Finance", founder: "Bob", funding: 75, products: "AI trading bot"},
+            {name: "Startup C", sector: "Automotive", founder: "Charlie", funding: 90, products: "Self-driving software"},
+            {name: "Startup D", sector: "Retail", founder: "David", funding: 45, products: "AI recommendation engine"},
+            {name: "Startup E", sector: "Education", founder: "Eva", funding: 60, products: "AI tutoring system"},
+            {name: "Startup F", sector: "Real Estate", founder: "Tony", funding: 83, products: "AI consultant"},
+            {name: "Startup G", sector: "Environment", founder: "Bob", funding: 65, products: "AI planting"},
+            {name: "Startup H", sector: "Healthcare", founder: "Matt", funding: 100, products: "AI chatting bot"},
+            {name: "Startup I", sector: "Education", founder: "Leo", funding: 90, products: "AI teacher"},
+            {name: "Startup J", sector: "Crime", founder: "Emma", funding: 80, products: "AI monitoring system"},
+            {name: "Startup K", sector: "Finance", founder: "Lisa", funding: 75, products: "AI currency converter"},
+            {name: "Startup L", sector: "Automotive", founder: "Chris", funding: 99, products: "AI photo shooting"},
+            {name: "Startup M", sector: "Education", founder: "Meg", funding: 110, products: "AI speaker"},
+            {name: "Startup N", sector: "Environment", founder: "Daniel", funding: 90, products: "AI energy-saving system"}
+        ];
+
+        const cardsContainer = d3.select("#cards");
+
+        data.forEach(d => {
+            const card = cardsContainer.append("div").attr("class", "card");
+            const cardInner = card.append("div").attr("class", "card-inner");
+
+            // Front of the card
+            cardInner.append("div")
+                .attr("class", "card-front")
+                .html(`<h3>${d.name}</h3><p>Sector: ${d.sector}</p><p>Funding: $${d.funding}M</p>`);
+
+            // Back of the card
+            cardInner.append("div")
+                .attr("class", "card-back")
+                .html(`<h3>${d.name}</h3><p>Founder: ${d.founder}</p><p>Products: ${d.products}</p>`);
+        });
+    </script>
+</body>
+</html>

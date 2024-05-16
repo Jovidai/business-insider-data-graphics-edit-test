@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sector Analysis Bubble Chart</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .bubble {
+            stroke: #fff;
+            stroke-width: 1.5px;
+        }
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            width: 120px;
+            padding: 8px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h2><u>Sketch 3: Bubble Chart - - - by Jovi Dai</u></h2>
+    <h3>Description: A bubble chart categorizing AI startups by industry sector and funding size. Each bubble's size represents the amount of funding, and its color represents the sector.</h3>
+    <h3>Interactive Features: Users can click on bubbles for more information about specific startups. Filters allow bubbles to be sorted by region and sector.</h3>
+    <h3>Sketch:</h3>
+
+    <br>
+ 
+    <div id="chart"></div>
+    <script>
+        // Set up the dimensions and margins
+        const margin = {top: 20, right: 20, bottom: 30, left: 40};
+        const width = 960 - margin.left - margin.right;
+        const height = 600 - margin.top - margin.bottom;
+
+        // Append SVG element
+        const svg = d3.select("#chart").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Tooltip
+        const tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        // Sample data
+        const data = [
+            {sector: "Healthcare", funding: 150, x: 200, y: 300},
+            {sector: "Finance", funding: 250, x: 400, y: 200},
+            {sector: "Automotive", funding: 100, x: 600, y: 400},
+            {sector: "Retail", funding: 120, x: 800, y: 300},
+            {sector: "Education", funding: 90, x: 300, y: 100},
+            {sector: "Real Estate", funding: 80, x: 500, y: 500},
+            {sector: "Environment", funding: 180, x: 600, y: 800},
+            {sector: "Crime", funding: 200, x: 750, y: 810}
+        ];
+
+        // Scales
+        const x = d3.scaleLinear()
+            .domain([0, 1000])
+            .range([0, width]);
+
+        const y = d3.scaleLinear()
+            .domain([1000, 0])
+            .range([0, height]);
+
+        const r = d3.scaleSqrt()
+            .domain([0, d3.max(data, d => d.funding)])
+            .range([10, 50]);
+
+        // Color scale for sectors
+        const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+        // Add bubbles
+        svg.selectAll(".bubble")
+            .data(data)
+            .enter().append("circle")
+            .attr("class", "bubble")
+            .attr("cx", d => x(d.x))
+            .attr("cy", d => y(d.y))
+            .attr("r", d => r(d.funding))
+            .style("fill", d => color(d.sector))
+            .on("mouseover", (event, d) => {
+                tooltip.transition().duration(200).style("opacity", .9);
+                tooltip.html(`Sector: ${d.sector}<br>Funding: $${d.funding}M`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", () => {
+                tooltip.transition().duration(500).style("opacity", 0);
+            });
+
+        // Add axes
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        svg.append("g")
+            .call(d3.axisLeft(y));
+    </script>
+</body>
+</html>

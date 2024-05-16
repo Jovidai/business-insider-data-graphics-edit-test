@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline of AI Investments</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            pointer-events: none;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            shape-rendering: crispEdges;
+        }
+        .line {
+            fill: none;
+            stroke: #0012f8;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2><u>Sketch 2: Timeline of AI Investments - - - by Jovi Dai</u></h2>
+    <h3>Description: A horizontal timeline chart displaying the AI industry's key investment milestones and events. Major funding rounds and significant events are marked on the timeline.</h3>
+    <h3>Interactive Features: Users can scroll through the timeline and hover over markers to see detailed information about each event.</h3>
+    <h3>Sketch:</h3>
+
+    <br>
+
+    <div id="timeline"></div>
+    <script>
+        // Width and height of the timeline
+        const margin = {top: 20, right: 20, bottom: 30, left: 50};
+        const width = 960 - margin.left - margin.right;
+        const height = 200 - margin.top - margin.bottom;
+
+        // Tooltip
+        const tooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
+
+        // SVG element
+        const svg = d3.select("#timeline").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Parse the date
+        const parseTime = d3.timeParse("%Y-%m-%d");
+
+        // Scale
+        const x = d3.scaleTime().range([0, width]);
+        const y = d3.scaleLinear().range([height, 0]);
+
+        // Line generator
+        const valueline = d3.line()
+            .x(d => x(d.date))
+            .y(d => y(d.value));
+
+        // Load the data
+        const data = [
+            {date: "2020-01-01", value: 30, event: "Event 1"},
+            {date: "2020-02-01", value: 80, event: "Event 2"},
+
+            {date: "2020-03-01", value: 60, event: "Event 3"},
+            {date: "2020-04-01", value: 50, event: "Event 4"},
+            {date: "2020-05-01", value: 70, event: "Event 5"},
+            {date: "2020-06-01", value: 80, event: "Event 6"},
+            {date: "2020-07-01", value: 50, event: "Event 7"},
+            {date: "2020-08-01", value: 80, event: "Event 8"},
+            {date: "2020-09-01", value: 60, event: "Event 9"},
+            {date: "2020-10-01", value: 70, event: "Event 10"},
+            {date: "2020-11-01", value: 40, event: "Event 11"},
+            {date: "2020-12-01", value: 60, event: "Event 12"},
+
+            {date: "2021-01-01", value: 45, event: "Event 13"},
+            {date: "2021-02-01", value: 65, event: "Event 14"},
+            {date: "2021-03-01", value: 55, event: "Event 15"},
+            {date: "2021-04-01", value: 66, event: "Event 16"},
+            {date: "2021-05-01", value: 76, event: "Event 17"},
+            {date: "2021-06-01", value: 50, event: "Event 18"},
+            {date: "2021-07-01", value: 40, event: "Event 19"},
+            {date: "2021-08-01", value: 80, event: "Event 20"},
+            {date: "2021-09-01", value: 60, event: "Event 21"},
+            {date: "2021-10-01", value: 55, event: "Event 22"},
+            {date: "2021-11-01", value: 70, event: "Event 23"},
+            {date: "2021-12-01", value: 60, event: "Event 24"},
+
+            {date: "2022-01-01", value: 120, event: "Event 25"},
+            {date: "2022-02-01", value: 110, event: "Event 26"},
+            {date: "2022-03-01", value: 120, event: "Event 27"},
+            {date: "2022-04-01", value: 110, event: "Event 28"},
+            {date: "2022-05-01", value: 90, event: "Event 29"},
+            {date: "2022-06-01", value: 100, event: "Event 30"},
+            {date: "2022-07-01", value: 120, event: "Event 31"},
+            {date: "2022-08-01", value: 110, event: "Event 32"},
+            {date: "2022-09-01", value: 100, event: "Event 33"},
+            {date: "2022-10-01", value: 180, event: "Event 34"},
+            {date: "2022-11-01", value: 120, event: "Event 35"},
+            {date: "2022-12-01", value: 110, event: "Event 36"},
+
+            {date: "2023-01-01", value: 150, event: "Event 36"}
+
+            
+        ];
+
+        data.forEach(d => {
+            d.date = parseTime(d.date);
+            d.value = +d.value;
+        });
+
+        // Scale the range of the data
+        x.domain(d3.extent(data, d => d.date));
+        y.domain([0, d3.max(data, d => d.value)]);
+
+        // Add the valueline path
+        svg.append("path")
+            .data([data])
+            .attr("class", "line")
+            .attr("d", valueline);
+
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // Add the Y Axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(d3.axisLeft(y));
+
+        // Add circles for data points
+        svg.selectAll("dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("r", 5)
+            .attr("cx", d => x(d.date))
+            .attr("cy", d => y(d.value))
+            .on("mouseover", (event, d) => {
+                tooltip.transition().duration(200).style("opacity", .9);
+                tooltip.html(`Date: ${d.date.toLocaleDateString()}<br>Value: ${d.value}<br>Event: ${d.event}`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", () => {
+                tooltip.transition().duration(500).style("opacity", 0);
+            });
+    </script>
+</body>
+</html>
