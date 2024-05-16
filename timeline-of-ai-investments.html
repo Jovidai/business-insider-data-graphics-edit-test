@@ -8,10 +8,15 @@
     <style>
         .tooltip {
             position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
+            text-align: center;
+            width: 160px;
             padding: 10px;
+            font-size: 14px;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
             pointer-events: none;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
         }
         .axis path,
         .axis line {
@@ -22,6 +27,12 @@
             fill: none;
             stroke: #0012f8;
             stroke-width: 2px;
+        }
+
+        circle {
+            fill: #ffab00;
+            stroke: #fff;
+            stroke-width: 1px;
         }
     </style>
 </head>
